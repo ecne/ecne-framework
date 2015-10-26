@@ -1,0 +1,23 @@
+{
+  "name": "ecne/mvc",
+  "description":  "MVC Framework",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "John P O'Grady",
+      "email": "ogradyjp@ogradyjohn.com",
+      "role": "Lead Developer"
+    }
+  ],
+  "autoload":{
+    "psr-4": {
+      "Ecne\\Controller\\": "app/controllers",
+      "Ecne\\Model\\": "app/models",
+      "Ecne\\Core\\": "app/core",
+      "Ecne\\Library\\Core\\": "app/libraries/core",
+      "Ecne\\Templator\\": "app/libraries/templator",
+      "Ecne\\ORM\\": "app/libraries/orm"
+    }
+  }
+}
