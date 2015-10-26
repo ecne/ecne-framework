@@ -29,7 +29,7 @@ class BootStrap
      {
          if (count($url)) {
              # controller specified
-             $this->controllerName = $url[0] . 'Controller';
+             $this->controllerName = ucfirst($url[0]) . 'Controller';
              # check if controller exists
              if (file_exists(CONTROLLER_PATH . $this->controllerName . '.php')) {
                  $this->controllerName = "Ecne\\Controller\\" . $this->controllerName;
