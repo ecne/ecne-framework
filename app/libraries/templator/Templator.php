@@ -75,11 +75,12 @@ class Templator
             $this->html = str_replace($condition, $output, $this->html);
         }
     }
-
+    /**
+     *  
+     */
     private function parseVariables()
     {
         foreach($this->variables as $variable){
-            //$this->debug($variable);
             # check for global variables
             if (preg_match('/[_]{2}[A-Z]+/', $variable)) {
                 $var = $this->trim(preg_replace('/[_]{2}/', '', $variable));
@@ -88,7 +89,6 @@ class Templator
             }
             $variable = $this->trim($variable);
             if (isset($this->data[$variable])) {
-                //$this->html = str_replace($this->trim($variable), $this->trim($this->data[$variable]), $this->html);
                 $this->html = preg_replace('/[{]{2}[\s]{0,}'.$variable.'[\s]{0,}[}]{2}/', $this->data[$variable], $this->html);
             } else {
                 $this->html = preg_replace('/[{]{2}[\s]{0,}['.$variable.']+[\s]{0,}[}]{2}/', '', $this->html);
@@ -97,8 +97,6 @@ class Templator
     }
 
     /**
-     *  @access private
-     *  @method sort
      *  @param $layout|string
      *  @param $view|string
      *  @return string
@@ -119,8 +117,6 @@ class Templator
         return $header . $midSection . $footer;
     }
     /**
-     *  @access private
-     *  @method splash
      *  @param $html|string
      *  @return void
      */
@@ -134,8 +130,6 @@ class Templator
         $this->data = array();
     }
     /**
-     *  @access private
-     *  @method getGlobalVariable
      *  @param name|string
      *  @return mixed
      */
@@ -143,17 +137,26 @@ class Templator
     {
         return Config::get($name);
     }
-
+    /**
+     *  @param $variable|string
+     *  @return string
+     */
     private function trim($variable)
     {
         return trim(str_replace('}}', '', str_replace('{{', '', $variable)));
     }
-
+    /**
+     *  @param $conditional|string
+     *  @return string
+     */
     private function escapeConditional($conditional)
     {
          return str_replace('}}--', '', str_replace('--{{', '', str_replace('::', '', $conditional)));
     }
-
+    /**
+     *
+     *  @param $string|string
+     */
     public function debug($string)
     {
         if (is_array($string)) {
