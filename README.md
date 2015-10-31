@@ -36,6 +36,7 @@ Once you have downloaded Ecne to your project folder you should have a file stru
         *   views
     *   public
         *   res
+    *	assets
 
 Inside app is all the core functionality for this _Model View Controller_ framework. We store the controllers inside the controllers folder. The controllers will be responsible for loading the correct view depending on where in your website a user goes. It will also be responsible for loading in models which store the dynamic data for the webpage, and serve it to the view to be rendered in webpage.
 
