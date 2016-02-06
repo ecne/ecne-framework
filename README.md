@@ -52,16 +52,17 @@ This command will install all dependecies in a vendor folder and create an autlo
 Controllers are responsible for the transfer of model data to the view.  Controllers contain actions, which are basically routes that controller can load.  For example, if you had a Controller User, you could have multiple actions associated with that control that relate to a user account.  Actions may include, login, logout, register, settings.  Here is an example Controller class:
 
 
-`<?php`
-`namespace Ecne\Controller;`
+```<?php
+namespace Ecne\Controller;
 
-`class NewController extends Controller`
-`{`
-   `public function action()`
-   `{`
-         `... perform action ...`
-   `}`
-`}`
+class NewController extends Controller
+{
+   public function action()
+   {
+         ... perform action ...
+   }
+}
+```
 
 #### Default Controllers
 
