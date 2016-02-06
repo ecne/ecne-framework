@@ -73,7 +73,7 @@ By default, when you download the Ecne Framework, it comes with two default cont
 
 To create a controller, you need to create a controller class inside the `app/controller` folder.  You must append the word Controller to the end of all filenames for controllers.  For example, if you wanted to create a controller for a person. You would create the controller under the controllers folder, name it Person`Controller` to be loaded when your browser points to `http://yourwebsite/person/`.
 
-Controllers must reside inside the `Ecne\Controller1 namespace and must extend the base `Controller` class.
+Controllers must reside inside the `Ecne\Controller namespace and must extend the base `Controller` class.
 
 ```<?php
 namespace Ecne\Controller;
