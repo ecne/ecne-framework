@@ -67,7 +67,41 @@ You can now type `www.yourwebsite.com/newcontroller/action` into your browser an
 
 #### Default Controllers
 
+By default, when you download the Ecne Framework, it comes with two default controllers.  Index, and Error.  The index controller handles actions for the index of your website, like landing page, contact, about, pages.  Error will load every time a user tries to navigate to a controller that has never been created.  If a user attempts to call an action that doesn't exist but the controller does, the controllers index action is called by default.
+
 #### Creating a Controller
+
+To create a controller, you need to create a controller class inside the `app/controller` folder.  You must append the word Controller to the end of all filenames for controllers.  For example, if you wanted to create a controller for a person. You would create the controller under the controllers folder, name it Person`Controller` to be loaded when your browser points to `http://yourwebsite/person/`.
+
+Controllers must reside inside the `Ecne\Controller1 namespace and must extend the base `Controller` class.
+
+```<?php
+namespace Ecne\Controller;
+
+class PersonController extends Controller
+{
+   ...
+}
+```
 
 #### Defining Actions
 
+To define actions for a controller you just create methods in the controller class with the names of the actions you wish to run.  If you wanted a logout action in the Person Controller, you would create a method called `logout` in the `PersonController`.
+
+```<?php
+namespace Ecne\Controller;
+
+class PersonController extends Controller
+{
+   public function logout()
+   {
+         ... log user out ...
+   }
+}
+```
+
+### Views
+
+### Create a View
+
+### Calling Views
