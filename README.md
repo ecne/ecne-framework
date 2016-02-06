@@ -63,6 +63,7 @@ class NewController extends Controller
    }
 }
 ```
+You can now type `www.yourwebsite.com/newcontroller/action` into your browser and the code above will run.
 
 #### Default Controllers
 
