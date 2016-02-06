@@ -17,17 +17,13 @@ MVC &amp; ORM PHP Framework with a Template Engine
 
 #### Installation
 
-Ecne framework is avaiable on [GitHub](https://www.github.com/natedrake/ecne_framework) and [Packagist](#).It is best to download the framework using the git command in your projects root folder
-
-1\. Go to your webservers root folder, or the root folder of your project.  
-2\. Open command prompt and run the following command:  
-`git clone https://www.github.com/natedrake/ecne_framework`
+The [Ecne-Framework](https://www.github.com/natedrake/ecne_framework) is avaiable on [GitHub](https://github.com/ecne/ecne-framework/archive/master.zip).  Once you download the zip folder, extract it contents and copy all files and folders inside the ecne-framework folder into your project's root folder.
 
 #### Install Framework
 
 Once you have downloaded Ecne to your project folder you should have a file structure like:  
 
-*   Ecne Framework
+*   Project Root
     *   app
         *   controllers
         *   core
