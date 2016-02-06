@@ -11,7 +11,7 @@ include_once BASE_PATH . '/vendor/autoload.php';
 
 /** GloBal Configuration array **/
 $GLOBALS['config'] = array(
-    'ROOT' => '/',
+    'ROOT' => 'http://localhost/',
     'mysql' => array(
         'driver' => 'MYSQL',
         'tables' => array(),
