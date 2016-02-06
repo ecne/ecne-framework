@@ -1,0 +1,23 @@
+.intro-center
+{
+	width : 35%;
+	margin : 10% auto;
+    font-family: 'Roboto', Arial, Helvetic, sans-serif;
+}
+.intro-center .intro-border
+{
+    border: 1px solid #ddd;
+    border-radius : 5px;
+    padding : 10px;
+}
+.intro-center .intro-footer
+{
+    text-align : right;
+    font-size: .9em;
+    color : #999;
+}
+.intro-heading
+{
+	text-align:center;
+    color : #777;
+}
