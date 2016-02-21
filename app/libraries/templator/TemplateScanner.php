@@ -104,7 +104,7 @@ class TemplateScanner extends Scanner
     /**
      * @return mixed
      */
-    protected function next()
+    public function next()
     {
         $scanners = array(
             'scanWhiteSpace',

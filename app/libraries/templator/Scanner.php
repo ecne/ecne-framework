@@ -80,5 +80,5 @@ abstract class Scanner
     /**
      * @return mixed
      */
-    abstract protected function next();
+    abstract public function next();
 }
