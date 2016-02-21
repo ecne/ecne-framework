@@ -2,32 +2,40 @@
 
 namespace Ecne\Controller;
 
-use Ecne\Core\View;
-use Ecne\Model\Model;
+use Ecne\Core\View as View;
+use Ecne\Model\Model as Model;
 
 class Controller
 {
-    protected $controllerName;
-    protected $view;
-    protected $model;
     /**
-     *  @method __construct
-     *  @return void
+     * @var string
+     */
+    protected $controllerName;
+    /**
+     * @var View
+     */
+    protected $view;
+    /**
+     * @var Model
+     */
+    protected $model;
+
+    /**
+     * @param string $controllerName
      */
     public function __construct($controllerName = 'index')
     {
         $this->controllerName = $controllerName;
-        $this->view = new View();
     }
     /**
      *  @method index
-     *  @param $paramaters|array
      *  @return void
      */
-    public function index($parameters = array())
+    public function index()
     {
-        $this->view->render('index/index', [
-            'title'=> 'TestTitle'
+        $this->view = new View('index/index');
+        $this->view->render([
+            'title'=> 'Home'
         ]);
     }
 }

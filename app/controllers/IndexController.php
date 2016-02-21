@@ -2,12 +2,11 @@
 
 /**
  *  Class IndexController
- *
- *
- *
  */
 
 namespace Ecne\Controller;
+
+use Ecne\Core\View as View;
 
 class IndexController extends Controller
 {
@@ -17,28 +16,9 @@ class IndexController extends Controller
      */
     public function index($parameters = array())
     {
-        $this->view->render('index/index', [
-            'title'=>'Home'
-        ]);
-    }
-    /**
-     *  @method about
-     *  @return void
-     */
-    public function about()
-    {
-        $this->view->render('index/about', [
-            'title'=> 'About Us'
-        ]);
-    }
-    /**
-     *  @method contact
-     *  @return void
-     */
-    public function contact()
-    {
-        $this->view->render('index/contact', [
-            'title'=>'Contact Us'
+        $this->view = new View('index/index');
+        $this->view->render([
+            'title'=>'Home',
         ]);
     }
 }   # End Class Definition

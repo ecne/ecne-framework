@@ -12,24 +12,20 @@ class View
     private $templator = null;
 
     /**
-     *  @method __construct
-     *  @return void
+     * @param $view
      */
-    function __construct()
+    function __construct($view)
     {
-        $this->templator = new Templator();
+        $this->templator = new Templator((VIEW_PATH . $view . '.htm'));
     }
 
     /**
      *  @method render
-     *  @param $view|string
      *  @param $data|array
      *  @return void
      */
-     public function render($view, $data = array())
+     public function render($data = array())
      {
-         $this->templator->render((VIEW_PATH . 'layout.htm'), (VIEW_PATH . $view . '.htm'), $data);
-         //$this->output = ob_get_contents();
-         //ob_end_clean();
+         $this->templator->render($data);
      }
 }
