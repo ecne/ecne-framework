@@ -101,6 +101,13 @@ class TemplateScanner extends Scanner
         }
     }
 
+    private function scanExtends()
+    {
+        if ($token = $this->scanToken('/^(~##~)/', 'extends'))  {
+            return $token;
+        }
+    }
+
     /**
      * @return mixed
      */
@@ -108,6 +115,7 @@ class TemplateScanner extends Scanner
     {
         $scanners = array(
             'scanWhiteSpace',
+            'scanExtends',
             'scanCloseTag',
             'scanOpenTag',
             'scanText',

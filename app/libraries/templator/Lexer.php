@@ -2,17 +2,24 @@
 
 namespace Ecne\Templator;
 
-
 class Lexer
 {
     /**
      * @var Token[]
      */
-    private $tokens;
+    private $tokens = array();
     /**
      * @var Token[]
      */
-    private $parsedTokens;
+    private $parsedTokens = array();
+    /**
+     * @var Token[]
+     */
+    private $layoutTokens = array();
+    /**
+     * @var Token[]
+     */
+    private $bodyTokens = array();
     /**
      * @var array
      */
@@ -20,10 +27,12 @@ class Lexer
 
     /**
      * @param $tokens
+     * @param $layoutTokens
      */
-    function __construct($tokens = array())
+    function __construct($tokens = array(), $layoutTokens = array())
     {
-        $this->tokens = $tokens;
+        $this->bodyTokens = $tokens;
+        $this->layoutTokens = $layoutTokens;
     }
 
     /**
@@ -42,12 +51,14 @@ class Lexer
         $this->tokens = $tokens;
     }
 
+    /**
+     * @param $variables
+     */
     public function go($variables)
     {
         $this->variables = $variables;
         $this->parseTokens();
     }
-
 
     private function parseTokens()
     {
@@ -68,6 +79,8 @@ class Lexer
                         }
                     }
                 }
+            } else if ($token->getType() === Token::$TYPE_EXTENDS) {
+                continue;
             } else if ($token->getType() === Token::$TYPE_EOS) {
                 continue;
             }
@@ -75,18 +88,48 @@ class Lexer
         }
     }
 
-    public function build()
+    private function buildHead()
     {
-        foreach($this->parsedTokens as $token) {
-            echo $token->getRaw();
+        $ishead = true;
+        $x = 0;
+        foreach($this->layoutTokens as $token) {
+            if ($token->getType() === 'extends') {
+                break;
+            } else {
+                $this->tokens[] = $token;
+                unset($this->layoutTokens[$x]);
+            }
+            $x++;
         }
     }
 
+    public function build()
+    {
+        $this->buildHead();
+        foreach($this->bodyTokens as $token) {
+            $this->tokens[] = $token;
+        }
+        foreach($this->layoutTokens as $ltk) {
+            $this->tokens[] = ($ltk);
+        }
+        $this->parseTokens();
+        foreach($this->parsedTokens as $tk) {
+            echo $tk->getRaw();
+        }
+    }
+
+    /**
+     * @param $name
+     * @return mixed
+     */
     private function parseVariable($name)
     {
         return $this->variables[$name];
     }
 
+    /**
+     * @param $code
+     */
     private function parseCode($code)
     {
         $codeScanner = new CodeScanner();
@@ -96,6 +139,10 @@ class Lexer
         }
     }
 
+    /**
+     * @param $name
+     * @return bool
+     */
     private function isVariable($name)
     {
         if (isset($this->variables[$name])) {

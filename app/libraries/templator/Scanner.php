@@ -31,6 +31,11 @@ abstract class Scanner
         $this->input = substr($this->input, $length);
     }
 
+    public function setTokens($tokens = array())
+    {
+        $this->tokens = $tokens;
+    }
+
     /**
      * @param $type
      * @param $raw

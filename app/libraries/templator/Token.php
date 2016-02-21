@@ -19,6 +19,7 @@ class Token
     public static $TYPE_CLOSING = 'endtag';
     public static $TYPE_ECHO = 'echo';
     public static $TYPE_CODEBLOCK = 'codeblock';
+    public static $TYPE_EXTENDS = 'extends';
     public static $TYPE_EOS = 'eos';
     #endregion
     /**
