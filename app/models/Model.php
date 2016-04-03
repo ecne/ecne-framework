@@ -179,6 +179,16 @@ class Model
     }
 
     /**
+     *  @param $col
+     *  @param $order
+     **/
+    public function sort($col, $order)
+    {
+        $this->datebase_->orderBy(array($col, $order));
+        return $this;
+    }
+
+    /**
      * @param int $limit
      * @param int|null $offset
      * @return $this

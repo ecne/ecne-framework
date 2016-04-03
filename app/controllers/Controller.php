@@ -1,4 +1,7 @@
 <?php
+/**
+ *  @class Controller
+ */
 
 namespace Ecne\Controller;
 
@@ -7,27 +10,35 @@ use Ecne\Model\Model;
 
 class Controller
 {
-    protected $controllerName;
-    protected $view;
-    protected $model;
     /**
-     *  @method __construct
-     *  @return void
+     * @var string
+     */
+    protected $controllerName;
+    /**
+     * @var View
+     */
+    protected $view;
+    /**
+     * @var Model
+     */
+    protected $model;
+
+    /**
+     * @param string $controllerName
      */
     public function __construct($controllerName = 'index')
     {
-        $this->controllerName = $controllerName;
         $this->view = new View();
+        $this->controllerName = $controllerName;
     }
     /**
      *  @method index
-     *  @param $paramaters|array
      *  @return void
      */
-    public function index($parameters = array())
+    public function index()
     {
         $this->view->render('index/index', [
-            'title'=> 'TestTitle'
+            'title'=> 'Home'
         ]);
     }
 }

@@ -11,15 +11,13 @@ include_once BASE_PATH . '/vendor/autoload.php';
 
 /** GloBal Configuration array **/
 $GLOBALS['config'] = array(
-    'ROOT' => '/',
     'mysql' => array(
         'driver' => 'MYSQL',
         'tables' => array(),
         'host' => '127.0.0.1',
         'username' => 'root',
         'password' => '',
-        'db' => 'internal',
-        'user-fields' => array()
+        'db' => 'test'
     )
 );
 /** Call BootStrap for routing **/

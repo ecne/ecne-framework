@@ -2,15 +2,18 @@
 
 /**
  *  Class IndexController
- *
- *
- *
  */
 
 namespace Ecne\Controller;
 
+use Ecne\Core\View;
+
 class IndexController extends Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+    }
     /**
      *  @method index
      *  @param $parameters|array
@@ -18,27 +21,21 @@ class IndexController extends Controller
     public function index($parameters = array())
     {
         $this->view->render('index/index', [
-            'title'=>'Home'
+            'title'=>'Home',
         ]);
     }
-    /**
-     *  @method about
-     *  @return void
-     */
-    public function about()
-    {
-        $this->view->render('index/about', [
-            'title'=> 'About Us'
-        ]);
-    }
-    /**
-     *  @method contact
-     *  @return void
-     */
+
     public function contact()
     {
         $this->view->render('index/contact', [
-            'title'=>'Contact Us'
+            'title'=>'Contact',
+        ]);
+    }
+
+    public function about()
+    {
+        $this->view->render('index/about', [
+            'title'=>'About',
         ]);
     }
 }   # End Class Definition
