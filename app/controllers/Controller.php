@@ -1,9 +1,12 @@
 <?php
+/**
+ *  @class Controller
+ */
 
 namespace Ecne\Controller;
 
-use Ecne\Core\View as View;
-use Ecne\Model\Model as Model;
+use Ecne\Core\View;
+use Ecne\Model\Model;
 
 class Controller
 {
@@ -25,6 +28,7 @@ class Controller
      */
     public function __construct($controllerName = 'index')
     {
+        $this->view = new View();
         $this->controllerName = $controllerName;
     }
     /**
@@ -33,8 +37,7 @@ class Controller
      */
     public function index()
     {
-        $this->view = new View('index/index');
-        $this->view->render([
+        $this->view->render('index/index', [
             'title'=> 'Home'
         ]);
     }

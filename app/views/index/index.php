@@ -2,7 +2,7 @@
     <div class="intro-border">
         <div class="media">
           <div class="media-left">
-              <img class="media-object" src="http://localhost/public/res/img/logo.png" alt="...">
+              <img class="media-object" src="http://localhost/public/res/img/logo.png" alt="ecne-framework logo">
           </div>
           <div class="media-body">
             <h2 class="media-heading intro-heading">Default Landing Page</h2>
@@ -10,5 +10,4 @@
           </div>
         </div>
     </div>
-
 </div>

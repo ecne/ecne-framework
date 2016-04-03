@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="http://localhost/public/res/css/default.css" media="screen" title="no title" charset="utf-8">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="http://localhost/public/res/js/default.js"></script>
-        <title>##title##</title>
+        <title><?php echo $this->data('title'); ?></title>
     </head>
     <body>
         <div class="row">
@@ -32,10 +32,3 @@
             </nav>
             <div class="col-sm-2"></div>
             <div class="col-sm-8">
-                ~##~
-            </div>
-            <div class="col-sm-2"></div>
-        </div>
-        <p class="intro-footer">Created by natedrake 2016</p>
-    </body>
-</html>
