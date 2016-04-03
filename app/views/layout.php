@@ -2,11 +2,12 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+        <!-- google fonts -->
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
         <link rel="stylesheet" href="http://localhost/public/res/css/default.css" media="screen" title="no title" charset="utf-8">
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="http://localhost/public/res/js/default.js"></script>
         <title><?php echo $this->data('title'); ?></title>
     </head>
     <body>
@@ -24,6 +25,8 @@
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                   <ul class="nav navbar-nav">
+                      <li><a href="/contact">Contact</a></li>
+                      <li><a href="/about">About</a></li>
                   </ul>
                   <ul class="nav navbar-nav navbar-right">
                   </ul>

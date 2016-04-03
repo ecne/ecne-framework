@@ -24,4 +24,18 @@ class IndexController extends Controller
             'title'=>'Home',
         ]);
     }
+
+    public function contact()
+    {
+        $this->view->render('index/contact', [
+            'title'=>'Contact',
+        ]);
+    }
+
+    public function about()
+    {
+        $this->view->render('index/about', [
+            'title'=>'About',
+        ]);
+    }
 }   # End Class Definition
