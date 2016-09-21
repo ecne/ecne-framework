@@ -1,5 +1,5 @@
 # ecne-framework
-MVC &amp; ORM PHP Framework with a Template Engine
+MVC &amp; ORM PHP Framework
 
 ## Ecne - Documentation
 
