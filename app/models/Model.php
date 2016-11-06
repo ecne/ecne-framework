@@ -9,6 +9,9 @@ namespace Ecne\Model;
 
 use Ecne\ORM\DataBase;
 
+/**
+ * @property mixed database_
+ */
 class Model
 {
     #region class properties
@@ -17,7 +20,7 @@ class Model
      */
     protected $datebase_;
     /**
-     * @var Model $instance_
+     * @var $instance_
      */
     protected static $instance_;
     /**
@@ -93,12 +96,12 @@ class Model
         return new $caller();
     }
     /**
-    * @param $table
+    * @param $type
     * @return $this
     */
-    public function fromTable($table)
+    public function type($type)
     {
-      $this->database_->fromTable($table);
+      $this->database_->type($type);
       return $this;
     }
     /**
@@ -166,12 +169,18 @@ class Model
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function times()
     {
         $this->datebase_->times();
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function plus()
     {
         $this->datebase_->plus();
@@ -179,12 +188,15 @@ class Model
     }
 
     /**
-     *  @param $col
-     *  @param $order
-     **/
-    public function sort($col, $order)
+     * @param $orderBy
+     * @return $this
+     * @internal param $col
+     * @internal param $order
+     *
+     */
+    public function sort($orderBy)
     {
-        $this->datebase_->orderBy(array($col, $order));
+        $this->datebase_->orderBy($orderBy);
         return $this;
     }
 
@@ -222,6 +234,9 @@ class Model
         return $this;
     }
 
+    /**
+     * @return null
+     */
     public function save()
     {
         if ($this->new_) {
@@ -232,9 +247,11 @@ class Model
             $this->datebase_->setQueryType(DataBase::QUERY_TYPE_UPDATE);
             $this->update($this->toAssocArray());
         }
-
     }
 
+    /**
+     * @return array
+     */
     public function toAssocArray()
     {
         $properties = array();
@@ -274,11 +291,15 @@ class Model
         return $one;
     }
 
+    /**
+     * @return $this
+     */
     public function run()
     {
         $this->datebase_->run();
         return $this;
     }
+
     /**
      * @param $name
      * @return mixed
@@ -287,6 +308,7 @@ class Model
     {
         return $this->$name;
     }
+
     /**
      * @param $name
      * @param $arg
