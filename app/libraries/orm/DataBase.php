@@ -98,7 +98,7 @@ class DataBase
     /**
      * @var string
      */
-    private $orderBy = array();
+    private $orderBy = null;
     /**
      * @var array
      */
@@ -268,6 +268,12 @@ class DataBase
         }
         return $this;
     }
+
+    public function delete()
+    {
+        $this->setQueryType(self::QUERY_TYPE_DELETE);
+    }
+
     /**
      * @method buildQueryType
      * @return string
@@ -309,6 +315,8 @@ class DataBase
                 return $sql;
                 break;
             case self::QUERY_TYPE_DELETE:
+                $sql = self::QUERY_TYPE_DELETE . " FROM " . $this->table;
+                return $sql;
                 break;
             default:
                 break;
@@ -344,7 +352,7 @@ class DataBase
     public function buildOrderBy()
     {
         if (isset($this->orderBy) && is_array($this->orderBy)) {
-            $sql = "ORDER BY ";
+            $sql = " ORDER BY ";
             $i=1;
             foreach($this->orderBy as $k => $v) {
                 if ($i === count($this->orderBy)) {
@@ -445,7 +453,7 @@ class DataBase
         $this->queryType = self::QUERY_TYPE_SELECT;
         $this->whereClause = array();
         $this->insert = array();
-        $this->orderBy = array();
+        $this->orderBy = null;
         $this->query = null;
         $this->condChain = array();
         $this->paramArray = array();
