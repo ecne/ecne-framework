@@ -32,16 +32,19 @@ class DataBase
     const SQL_OR = " OR ";
     const SQL_VALUES = " VALUES ";
     const SQL_SET = " SET ";
+
+    const ORDER_DESCENDING = " DESC ";
+    const ORDER_ASCENDING = " ASC ";
     #endregion
 
     #region class properties
     /**
-     * @var \Ecne\DataBase\DBDriver $dbDriver
+     * @var DBDriver $dbDriver
      */
     private $dbDriver;
 
     /**
-     * @var \Ecne\DataBase\DataBase $instance
+     * @var DataBase $instance
      */
     private static $instance;
     /**
@@ -95,7 +98,7 @@ class DataBase
     /**
      * @var string
      */
-    private $orderBy;
+    private $orderBy = null;
     /**
      * @var array
      */
@@ -181,12 +184,12 @@ class DataBase
     /**
      * @method fromTable
      * @access public
-     * @param $table
+     * @param $type
      * @return $this
      */
-    public function fromTable($table)
+    public function type($type)
     {
-        $this->table = $table;
+        $this->table = $type;
         return $this;
     }
     /**
@@ -248,9 +251,7 @@ class DataBase
      */
     public function orderBy($orderBy)
     {
-        if (count($orderBy) == 2) {
-            $this->orderBy = $orderBy;
-        }
+        $this->orderBy = $orderBy;
         return $this;
     }
     /**
@@ -267,6 +268,12 @@ class DataBase
         }
         return $this;
     }
+
+    public function delete()
+    {
+        $this->setQueryType(self::QUERY_TYPE_DELETE);
+    }
+
     /**
      * @method buildQueryType
      * @return string
@@ -308,6 +315,8 @@ class DataBase
                 return $sql;
                 break;
             case self::QUERY_TYPE_DELETE:
+                $sql = self::QUERY_TYPE_DELETE . " FROM " . $this->table;
+                return $sql;
                 break;
             default:
                 break;
@@ -342,8 +351,17 @@ class DataBase
      */
     public function buildOrderBy()
     {
-        if (isset($this->orderBy)) {
-            $sql = " ORDER BY " . join(", ", $this->orderBy);
+        if (isset($this->orderBy) && is_array($this->orderBy)) {
+            $sql = " ORDER BY ";
+            $i=1;
+            foreach($this->orderBy as $k => $v) {
+                if ($i === count($this->orderBy)) {
+                    $sql .= "$k $v";
+                } else {
+                    $sql .= "$k $v, ";
+                }
+                $i++;
+            }
             return $sql;
         } else {
             return "";
@@ -435,6 +453,7 @@ class DataBase
         $this->queryType = self::QUERY_TYPE_SELECT;
         $this->whereClause = array();
         $this->insert = array();
+        $this->orderBy = null;
         $this->query = null;
         $this->condChain = array();
         $this->paramArray = array();

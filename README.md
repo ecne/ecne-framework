@@ -1,5 +1,5 @@
 # ecne-framework
-MVC &amp; ORM PHP Framework with a Template Engine
+MVC &amp; ORM PHP Framework
 
 ## Ecne - Documentation
 
@@ -98,6 +98,32 @@ class PersonController extends Controller
 
 #### Views
 
+Views consist of your design code, this includes html, css, javascript, jquery, etc... Your controller will generate data from your models, that you will use to update the view. 
+
 #### Create a View
 
+ All views needs to be stored in the views folder in projectroot/app/views. When storing views associated with controllers, it is best to store each individual controllers views in separate folders. For example, you may have two controllers called User and Blog.
+
+In the ```UserController``` you could have two actions home & logout. When the user goes to ```http://yourdomain.com/user/home``` the design code in the file ```app/views/user/home.php``` will be rendered to the webpage. In the BlogController you might have two actions called view & create. When a user navigates to ```http://yourdomain.com/blog/view``` the design code inside ```app/view/blog/view.php``` will be render and display a blog post to the user. 
+
 #### Calling Views
+
+ Following the recommendations of the previous step for creating views, makes calling a view from a controller pretty straight forward.
+
+Within a controller, inside the action the ```render``` method on our ```View``` object is what will call our view. This method requires two parameters. ```$view``` - the location of our view. You just need to reference the folder and file, the Ecne Framework is aware of the views location so you don't need to give the full path. For example, because our view is called home.php inside the person folder, we only need to supply ```person/home```. You don't need to supply the ```.php``` extension either. The second parameter is an array containing all the variables you will load in your view. This view does not completely remove the need for PHP blocks, but does help in cutting down the amount of PHP present in design code and helps maintain need design code.
+
+This will render the html stored in the home.php file store in ```/person/home.php ```
+
+```
+namespace Ecne\Controller;
+
+class PersonController extends Controller
+{
+    public function home()
+    {
+        $this->view->render('person/home', array(
+            'username'='batman'
+        ));
+    }
+}
+```

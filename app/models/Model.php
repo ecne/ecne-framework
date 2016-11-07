@@ -9,15 +9,18 @@ namespace Ecne\Model;
 
 use Ecne\ORM\DataBase;
 
+/**
+ * @property mixed database_
+ */
 class Model
 {
     #region class properties
     /**
-     * @var DataBase $datebase_
+     * @var DataBase $database_
      */
-    protected $datebase_;
+    protected $database_;
     /**
-     * @var Model $instance_
+     * @var $instance_
      */
     protected static $instance_;
     /**
@@ -27,7 +30,7 @@ class Model
     /**
      * @var string $primaryKey_
      */
-    private $primaryKey_ = 'id';
+    private $primaryKey_ = 'Id';
     /**
      * @var mixed $primaryKeyValue_
      */
@@ -43,7 +46,7 @@ class Model
                 $this->new_ = false;
             }
         }
-        $this->datebase_ = DataBase::getInstance();
+        $this->database_ = DataBase::getInstance();
     }
     /**
      * @param array|null $cols
@@ -56,7 +59,7 @@ class Model
         $callerClass = new $caller();
         $callerClass->database_ = DataBase::getInstance();
         if ($cols !== null) {
-            $callerClass->datebase_->selectColumns($cols);
+            $callerClass->database_->selectColumns($cols);
         }
         return $callerClass;
     }
@@ -93,12 +96,12 @@ class Model
         return new $caller();
     }
     /**
-    * @param $table
+    * @param $type
     * @return $this
     */
-    public function fromTable($table)
+    public function type($type)
     {
-      $this->database_->fromTable($table);
+      $this->database_->type($type);
       return $this;
     }
     /**
@@ -108,7 +111,7 @@ class Model
      */
     public function eq($field, $value)
     {
-        $this->datebase_->addWhere($field, '=', $value);
+        $this->database_->addWhere($field, '=', $value);
         return $this;
     }
     /**
@@ -118,7 +121,7 @@ class Model
      */
     public function neq($field, $value)
     {
-        $this->datebase_->addWhere($field, '!=', $value);
+        $this->database_->addWhere($field, '!=', $value);
         return $this;
     }
 
@@ -129,7 +132,7 @@ class Model
      */
     public function lt($field, $value)
     {
-        $this->datebase_->addWhere($field, '<', $value);
+        $this->database_->addWhere($field, '<', $value);
         return $this;
     }
 
@@ -140,7 +143,7 @@ class Model
      */
     public function lte($field, $value)
     {
-        $this->datebase_->addWhere($field, '<=', $value);
+        $this->database_->addWhere($field, '<=', $value);
         return $this;
     }
 
@@ -151,7 +154,7 @@ class Model
      */
     public function gt($field, $value)
     {
-        $this->datebase_->addWhere($field, '>', $value);
+        $this->database_->addWhere($field, '>', $value);
         return $this;
     }
 
@@ -162,29 +165,38 @@ class Model
      */
     public function gte($field, $value)
     {
-        $this->datebase_->addWhere($field, '>=', $value);
-        return $this;
-    }
-
-    public function times()
-    {
-        $this->datebase_->times();
-        return $this;
-    }
-
-    public function plus()
-    {
-        $this->datebase_->plus();
+        $this->database_->addWhere($field, '>=', $value);
         return $this;
     }
 
     /**
-     *  @param $col
-     *  @param $order
-     **/
-    public function sort($col, $order)
+     * @return $this
+     */
+    public function times()
     {
-        $this->datebase_->orderBy(array($col, $order));
+        $this->database_->times();
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function plus()
+    {
+        $this->database_->plus();
+        return $this;
+    }
+
+    /**
+     * @param $orderBy
+     * @return $this
+     * @internal param $col
+     * @internal param $order
+     *
+     */
+    public function sort($orderBy)
+    {
+        $this->database_->orderBy($orderBy);
         return $this;
     }
 
@@ -195,7 +207,7 @@ class Model
      */
     public function limit($limit, $offset = null)
     {
-        $this->datebase_->limit($limit, $offset);
+        $this->database_->limit($limit, $offset);
         return $this;
     }
 
@@ -205,8 +217,8 @@ class Model
      */
     public function insert($insert)
     {
-        $this->datebase_->insert($insert);
-        $this->datebase_->run();
+        $this->database_->insert($insert);
+        $this->database_->run();
         return $this;
     }
 
@@ -217,24 +229,38 @@ class Model
     public function update($update)
     {
         $this->eq($this->primaryKey_, $this->primaryKeyValue_);
-        $this->datebase_->update($update);
-        $this->datebase_->run();
+        $this->database_->update($update);
+        $this->database_->run();
         return $this;
     }
 
+    /**
+     * @return null
+     */
     public function save()
     {
         if ($this->new_) {
-            $this->datebase_->setQueryType(DataBase::QUERY_TYPE_INSERT);
+            $this->database_->setQueryType(DataBase::QUERY_TYPE_INSERT);
             $this->insert($this->toAssocArray());
         } else {
             # update
-            $this->datebase_->setQueryType(DataBase::QUERY_TYPE_UPDATE);
+            $this->database_->setQueryType(DataBase::QUERY_TYPE_UPDATE);
             $this->update($this->toAssocArray());
         }
-
     }
 
+    public function delete()
+    {
+        if (!$this->new_) {
+            $this->eq($this->primaryKey_, $this->primaryKeyValue_);
+            $this->database_->delete();
+            $this->database_->run();
+        }
+    }
+
+    /**
+     * @return array
+     */
     public function toAssocArray()
     {
         $properties = array();
@@ -251,7 +277,7 @@ class Model
      */
     public function all()
     {
-        $resultSet = $this->datebase_->run()->result();
+        $resultSet = $this->database_->run()->result();
         if (count($resultSet) > 0) {
             $this->new_ = false;
         }
@@ -263,7 +289,7 @@ class Model
      */
     public function one()
     {
-        $resultSet = $this->datebase_->limit(1)->run()->one();
+        $resultSet = $this->database_->limit(1)->run()->one();
         $one = null;
         if (count($resultSet) > 0) {
             $one = $this->dispenseClass()->hydrateClass($resultSet);
@@ -274,11 +300,15 @@ class Model
         return $one;
     }
 
+    /**
+     * @return $this
+     */
     public function run()
     {
-        $this->datebase_->run();
+        $this->database_->run();
         return $this;
     }
+
     /**
      * @param $name
      * @return mixed
@@ -287,6 +317,7 @@ class Model
     {
         return $this->$name;
     }
+
     /**
      * @param $name
      * @param $arg
