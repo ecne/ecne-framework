@@ -100,6 +100,11 @@ class QueryBuilder
         }
     }
 
+    public function setOrder($order=[])
+    {
+        $this->order = $order;
+    }
+
     /**
      * @note functions to build sql query
      */
@@ -117,14 +122,14 @@ class QueryBuilder
                     $parameters[] = $this->addParameter($v);
                 }
                 $parameters = implode(', ', $parameters);
-                return 'INSERT INTO `'.$this->entityType.'(`'.$columns.') VALUES ('.$parameters.')';
+                return 'INSERT INTO `'.$this->entityType.'` ('.$columns.') VALUES ('.$parameters.')';
                 break;
             case self::QUERY_TYPE_UPDATE:
                 $updates = [];
                 foreach ($this->entityData as $k => $v) {
                     $updates[] = $k.'='.$this->addParameter($v);
                 }
-                return 'INSERT INTO `'.$this->entityType.'` SET ' . implode(', ', $updates[]);
+                return 'UPDATE INTO `'.$this->entityType.'` SET ' . implode(', ', $updates[]);
                 break;
             case self::QUERY_TYPE_DELETE:
                 return 'DELETE FROM `'.$this->entityType.'`';

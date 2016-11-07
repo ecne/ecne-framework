@@ -271,7 +271,7 @@ class Model
      */
     public function limit($limit, $offset = null)
     {
-        $this->queryBuilder_->limit($limit, $offset);
+        $this->queryBuilder_->setLimit($limit, $offset);
         return $this;
     }
 
@@ -306,15 +306,16 @@ class Model
         }
 
         $this->queryBuilder_->setEntityData($this->toAssocArray());
-        $this->queryBuilder_->go();
+        $query = $this->queryBuilder_->go();
 
         if ($this->new_) {
             $primaryKey = $this->getPrimaryKey();
-            if ($this->$primaryKey === null) {
+            if (!property_exists(get_called_class(), $primaryKey)) {
                 $this->$primaryKey = DataBase::getLastInsertID();
             }
             $this->new_=false;
         }
+        $query->closeCursor();
     }
 
     /**
