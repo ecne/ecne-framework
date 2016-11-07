@@ -190,10 +190,21 @@ class QueryBuilder
      */
     private function buildOrder()
     {
-        if (count($this->order) > 0) {
-            return ' ORDER BY '.implode(', ', $this->order);
+        if (isset($this->order) && is_array($this->order) ) {
+            $sql = ' ORDER BY ';
+            $index=1;
+            foreach($this->order as $k => $v) {
+                if ($index === count($this->order)) {
+                    $sql .= "$k $v";
+                } else {
+                    $sql .= "$k $v, ";
+                }
+                $index++;
+            }
+            return $sql;
+        } else {
+            return '';
         }
-        return '';
     }
 
     /**

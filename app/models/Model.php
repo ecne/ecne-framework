@@ -286,7 +286,7 @@ class Model
      */
     public function sort($orderBy)
     {
-        $this->queryBuilder_->orderBy($orderBy);
+        $this->queryBuilder_->setOrder($orderBy);
         return $this;
     }
 
@@ -374,7 +374,7 @@ class Model
          * @var \PDOStatement $query
          */
         $query = $this->queryBuilder_->go();
-        return $query->fetchAll();
+        return $query->fetchAll(\PDO::FETCH_OBJ);
     }
 
     /**
