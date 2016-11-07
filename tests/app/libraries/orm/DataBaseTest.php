@@ -40,12 +40,4 @@ class DataBaseTest extends PHPUnit_Framework_TestCase
         $this->insertEntity();
         $this->assertEquals(DataBase::getLastInsertID(), 1);
     }
-
-    public function testInsert(){
-//        $this->insertEntity();
-//        $query = DataBase::execute('SELECT Id FROM `Entity` WHERE Id = ?', [6]);
-//        $row = $query->fetch(\PDO::FETCH_OBJ);
-//        $this->assertEquals($row->Id, 6);
-    }
-
 }
