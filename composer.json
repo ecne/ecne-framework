@@ -22,6 +22,11 @@
       "Ecne\\ORM\\DB\\": "app/libraries/orm/db"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Ecne\\ORM\\Test\\": "tests/app/libraries/orm"
+    }
+  },
   "require-dev": {
     "phpunit/phpunit": "4.7.*"
   }
