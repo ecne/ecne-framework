@@ -20,6 +20,9 @@ $GLOBALS['config'] = array(
         'db' => 'test'
     )
 );
+
+\Ecne\ORM\DB\DataBase::connect();
+
 /** Call BootStrap for routing **/
 $bootstrap = new \Ecne\Core\BootStrap();
 $bootstrap->parse($_SERVER['REQUEST_URI'], 'GET');

@@ -18,7 +18,11 @@
       "Ecne\\Library\\Core\\": "app/libraries/core",
       "Ecne\\Templator\\": "app/libraries/templator",
       "Ecne\\EmailTemplator\\":"app/libraries/emailtemplator",
-      "Ecne\\ORM\\": "app/libraries/orm"
+      "Ecne\\ORM\\": "app/libraries/orm",
+      "Ecne\\ORM\\DB\\": "app/libraries/orm/db"
     }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.7.*"
   }
 }

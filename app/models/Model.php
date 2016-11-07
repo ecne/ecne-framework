@@ -7,47 +7,47 @@
 
 namespace Ecne\Model;
 
-use Ecne\ORM\DataBase;
+use Ecne\ORM\DB\Database;
+use Ecne\ORM\QueryBuilder;
 
 /**
  * @property mixed database_
  */
 class Model
 {
-    #region class properties
     /**
-     * @var DataBase $database_
+     * @note static properties
      */
-    protected $database_;
+    protected static $table_;
+    protected static $primaryKey_ = 'Id';
+
     /**
-     * @var $instance_
+     * @var QueryBuilder
      */
-    protected static $instance_;
-    /**
-     * @var bool $new_
-     */
+    protected $queryBuilder_;
     protected $new_ = true;
-    /**
-     * @var string $primaryKey_
-     */
-    private $primaryKey_ = 'Id';
-    /**
-     * @var mixed $primaryKeyValue_
-     */
-    protected $primaryKeyValue_;
-    #endregion
-    /**
-     * @param mixed $id
-     */
-    public function __construct($id = null)
+
+    public function __construct($id=null)
     {
-        if ($id !== null) {
-            if (count($this->eq('id', $id)->limit(1)->all()) > 0) {
-                $this->new_ = false;
-            }
+        if (static::$table_ === null) {
+            static::$table_ = get_class($this);
         }
-        $this->database_ = DataBase::getInstance();
+
+        if ($id !== null) {
+            $this->queryBuilder_ = new QueryBuilder($this->getType());
+            $this->eq(self::$primaryKey_, $id)->limit(1);
+            /**
+             * @var \PDOStatement $query
+             */
+            $query = $this->queryBuilder_->go();
+            if ($r = $query->fetch(PDO::FETCH_OBJ)) {
+                $this->hydrateClass($r);
+                $this->new_=false;
+            }
+            $query->closeCursor();
+        }
     }
+
     /**
      * @param array|null $cols
      * @return mixed
@@ -57,22 +57,10 @@ class Model
     {
         $caller = get_called_class();
         $callerClass = new $caller();
-        $callerClass->database_ = DataBase::getInstance();
+        $callerClass->queryBuilder_ = new QueryBuilder(self::$table_);
         if ($cols !== null) {
-            $callerClass->database_->selectColumns($cols);
+            $callerClass->queryBuilder->selectColumns($cols);
         }
-        return $callerClass;
-    }
-
-    /**
-     * @return mixed
-     */
-
-    public static function create()
-    {
-        $caller = get_called_class();
-        $callerClass = new $caller();
-        $callerClass->database_ = DataBase::getInstance();
         return $callerClass;
     }
 
@@ -95,77 +83,164 @@ class Model
         $caller = get_called_class();
         return new $caller();
     }
+
     /**
+     * @note define entity type which will be used as the table's names
+     *
     * @param $type
     * @return $this
     */
     public function type($type)
     {
-      $this->database_->type($type);
+      $this->queryBuilder_->type($type);
       return $this;
     }
+
+    public function getType()
+    {
+        return static::$table_;
+    }
+
     /**
+     * @note filter where field equals value
+     *
      * @param string $field
      * @param string $value
      * @return $this
      */
     public function eq($field, $value)
     {
-        $this->database_->addWhere($field, '=', $value);
+        $this->queryBuilder_->addWhere($field, '=', $value);
         return $this;
     }
+
     /**
+     * @note filter where field does not equal value
+     *
      * @param string $field
      * @param string $value
      * @return $this
      */
     public function neq($field, $value)
     {
-        $this->database_->addWhere($field, '!=', $value);
+        $this->queryBuilder_->addWhere($field, '!=', $value);
         return $this;
     }
 
     /**
+     * @note filter field where value less than
+     *
      * @param string $field
      * @param string $value
      * @return $this
      */
     public function lt($field, $value)
     {
-        $this->database_->addWhere($field, '<', $value);
+        $this->queryBuilder_->addWhere($field, '<', $value);
         return $this;
     }
 
     /**
+     * @note filter field where value less than or equal
      * @param string $field
      * @param string $value
      * @return $this
      */
     public function lte($field, $value)
     {
-        $this->database_->addWhere($field, '<=', $value);
+        $this->queryBuilder_->addWhere($field, '<=', $value);
         return $this;
     }
 
     /**
+     * @note filter field where value greater than
+     *
      * @param string $field
      * @param string $value
      * @return $this
      */
     public function gt($field, $value)
     {
-        $this->database_->addWhere($field, '>', $value);
+        $this->queryBuilder_->addWhere($field, '>', $value);
         return $this;
     }
 
     /**
+     * @note filter field where value greater than or equal
+     *
      * @param string $field
      * @param string $value
      * @return $this
      */
     public function gte($field, $value)
     {
-        $this->database_->addWhere($field, '>=', $value);
+        $this->queryBuilder_->addWhere($field, '>=', $value);
+        return $this;
+    }
+
+    /**
+     * @note filter field by values in list
+     *
+     * @param $field
+     * @param $values
+     * @return $this
+     */
+    public function in($field, $values)
+    {
+        $this->queryBuilder_->addWhere($field, 'IN', $values);
+        return $this;
+    }
+
+    /**
+     * @param $field
+     * @param $values
+     * @return $this
+     */
+    public function notIn($field, $values)
+    {
+        $this->queryBuilder_->addWhere($field, 'NOT IN', $values);
+        return $this;
+    }
+
+    /**
+     * @param $field
+     * @param $value
+     * @return $this
+     */
+    public function like($field, $value)
+    {
+        $this->queryBuilder_->addWhere($field, 'LIKE', $value);
+        return $this;
+    }
+
+    /**
+     * @param $field
+     * @param $value
+     * @return $this
+     */
+    public function notLike($field, $value)
+    {
+        $this->queryBuilder_->addWhere($field, 'NOT LIKE', $value);
+        return $this;
+    }
+
+    /**
+     * @param $field
+     * @return $this
+     */
+    public function notNull($field)
+    {
+        $this->queryBuilder_->addWhere($field, 'IS NOT NULL', '');
+        return $this;
+    }
+
+    /**
+     * @param $field
+     * @return $this
+     */
+    public function isNull($field)
+    {
+        $this->queryBuilder_->addWhere($field, 'IS NULL', '');
         return $this;
     }
 
@@ -174,7 +249,7 @@ class Model
      */
     public function times()
     {
-        $this->database_->times();
+        $this->queryBuilder_->times();
         return $this;
     }
 
@@ -183,11 +258,26 @@ class Model
      */
     public function plus()
     {
-        $this->database_->plus();
+        $this->queryBuilder_->plus();
         return $this;
     }
 
     /**
+     * @note limit results with optional offset
+     *
+     * @param int $limit
+     * @param int|null $offset
+     * @return $this
+     */
+    public function limit($limit, $offset = null)
+    {
+        $this->queryBuilder_->limit($limit, $offset);
+        return $this;
+    }
+
+    /**
+     * @note sort results
+     *
      * @param $orderBy
      * @return $this
      * @internal param $col
@@ -196,41 +286,7 @@ class Model
      */
     public function sort($orderBy)
     {
-        $this->database_->orderBy($orderBy);
-        return $this;
-    }
-
-    /**
-     * @param int $limit
-     * @param int|null $offset
-     * @return $this
-     */
-    public function limit($limit, $offset = null)
-    {
-        $this->database_->limit($limit, $offset);
-        return $this;
-    }
-
-    /**
-     * @param array $insert
-     * @return $this
-     */
-    public function insert($insert)
-    {
-        $this->database_->insert($insert);
-        $this->database_->run();
-        return $this;
-    }
-
-    /**
-     * @param $update
-     * @return $this
-     */
-    public function update($update)
-    {
-        $this->eq($this->primaryKey_, $this->primaryKeyValue_);
-        $this->database_->update($update);
-        $this->database_->run();
+        $this->queryBuilder_->orderBy($orderBy);
         return $this;
     }
 
@@ -239,22 +295,37 @@ class Model
      */
     public function save()
     {
+        if ($this->queryBuilder_ === null) {
+            $this->queryBuilder_ = new QueryBuilder($this->getType());
+        }
         if ($this->new_) {
-            $this->database_->setQueryType(DataBase::QUERY_TYPE_INSERT);
-            $this->insert($this->toAssocArray());
+            $this->queryBuilder_->setQueryType(QueryBuilder::QUERY_TYPE_INSERT);
         } else {
-            # update
-            $this->database_->setQueryType(DataBase::QUERY_TYPE_UPDATE);
-            $this->update($this->toAssocArray());
+            $this->queryBuilder_->setQueryType(QueryBuilder::QUERY_TYPE_UPDATE);
+            $this->eq($this->getPrimaryKey(), $this->getPrimaryKeyValue());
+        }
+
+        $this->queryBuilder_->setEntityData($this->toAssocArray());
+        $this->queryBuilder_->go();
+
+        if ($this->new_) {
+            $primaryKey = $this->getPrimaryKey();
+            if ($this->$primaryKey === null) {
+                $this->$primaryKey = DataBase::getLastInsertID();
+            }
+            $this->new_=false;
         }
     }
 
+    /**
+     *
+     */
     public function delete()
     {
         if (!$this->new_) {
-            $this->eq($this->primaryKey_, $this->primaryKeyValue_);
-            $this->database_->delete();
-            $this->database_->run();
+            $this->eq($this->getPrimaryKey(), $this->getPrimaryKeyValue());
+            $this->queryBuilder_->setQueryType(QueryBuilder::QUERY_TYPE_DELETE);
+            $this->queryBuilder_->go();
         }
     }
 
@@ -273,40 +344,57 @@ class Model
     }
 
     /**
-     * @return mixed
-     */
-    public function all()
-    {
-        $resultSet = $this->database_->run()->result();
-        if (count($resultSet) > 0) {
-            $this->new_ = false;
-        }
-        return $resultSet;
-    }
-
-    /**
-     * @return mixed
+     * @return $this|null
      */
     public function one()
     {
-        $resultSet = $this->database_->limit(1)->run()->one();
+        /**
+         * @var \PDOStatement $query
+         */
+        $this->queryBuilder_->setLimit(1);
+        $query = $this->queryBuilder_->go();
+        $result = $query->fetch(\PDO::FETCH_OBJ);
         $one = null;
-        if (count($resultSet) > 0) {
-            $one = $this->dispenseClass()->hydrateClass($resultSet);
-            $primary = $this->primaryKey_;
-            $one->primaryKeyValue_ = (int)$resultSet->$primary;
-            $one->new_ = false;
+        if (count($result)) {
+            $one = $this->dispenseClass()->hydrateClass($result);
+            $primaryKey = $this->getPrimaryKey();
+            $one->$primaryKey = $result->$primaryKey;
+            $one->new_=false;
         }
         return $one;
     }
 
     /**
-     * @return $this
+     * @return mixed
      */
-    public function run()
+    public function all()
     {
-        $this->database_->run();
-        return $this;
+        /**
+         * @var \PDOStatement $query
+         */
+        $query = $this->queryBuilder_->go();
+        return $query->fetchAll();
+    }
+
+    /**
+     * @return string
+     */
+    public function getPrimaryKey()
+    {
+        return static::$primaryKey_;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getPrimaryKeyValue()
+    {
+        $primaryKey = $this->getPrimaryKey();
+        if (isset($this->$primaryKey)) {
+            return $this->$primaryKey;
+        } else {
+            return null;
+        }
     }
 
     /**
