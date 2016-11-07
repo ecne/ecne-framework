@@ -11,8 +11,6 @@ namespace Ecne\Orm\Test;
 use Ecne\ORM\DB\Database;
 use PHPUnit_Framework_TestCase;
 
-require_once dirname(dirname(__DIR__)) . '/vendor/autoload.php';
-
 class DataBastTest extends PHPUnit_Framework_TestCase
 {
     protected function setUp()
