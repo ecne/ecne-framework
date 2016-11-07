@@ -6,7 +6,7 @@
  * Time: 10:37
  */
 
-namespace Ecne\Orm\Test;
+namespace Ecne\Test;
 
 use Ecne\ORM\DB\Database;
 use PHPUnit_Framework_TestCase;
