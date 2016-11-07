@@ -11,6 +11,8 @@ namespace Ecne\Orm\Test;
 use Ecne\ORM\DB\Database;
 use PHPUnit_Framework_TestCase;
 
+require_once dirname(dirname(__DIR__)) . '/vendor/autoload.php';
+
 class DataBastTest extends PHPUnit_Framework_TestCase
 {
     protected function setUp()
@@ -40,7 +42,6 @@ class DataBastTest extends PHPUnit_Framework_TestCase
         $query = DataBase::execute('SELECT Id FROM `Entity` WHERE Id = ?', [6]);
         $row = $query->fetch(\PDO::FETCH_OBJ);
         $this->assertEquals($row->Id, 6);
-
     }
 
 }
