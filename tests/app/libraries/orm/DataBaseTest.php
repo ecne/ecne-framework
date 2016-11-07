@@ -11,7 +11,7 @@ namespace Ecne\Test;
 use Ecne\ORM\DB\DataBase;
 use PHPUnit_Framework_TestCase;
 
-class DataBastTest extends PHPUnit_Framework_TestCase
+class DataBaseTest extends PHPUnit_Framework_TestCase
 {
     /**
      *
