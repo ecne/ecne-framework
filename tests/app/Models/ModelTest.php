@@ -10,7 +10,12 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         parent::setup();
     }
 
-    public function testInsertModel()
+    public function testSort()
     {
     }
+
+    public function testLimit()
+    {
+    }
+
 }
