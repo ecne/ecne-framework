@@ -105,6 +105,16 @@ class QueryBuilder
         $this->order = $order;
     }
 
+    public function plus()
+    {
+        $this->conditionChain[] = " OR ";
+    }
+
+    public function times()
+    {
+        $this->conditionChain[] = " AND ";
+    }
+
     /**
      * @note functions to build sql query
      */
@@ -147,9 +157,9 @@ class QueryBuilder
             $conditionCount=0;
             foreach($this->where as $where) {
                 if ($conditionCount < count($this->conditionChain)) {
-                    $conditions[] = $this->buildWhereCondition($where['field'], $where['op'], $where['value']).$this->conditionChain[$conditionCount];
+                    $conditions[] = $this->buildWhereCondition('`'.$where['field'].'`', $where['op'], $where['value']).$this->conditionChain[$conditionCount];
                 } else {
-                    $conditions[] = $this->buildWhereCondition($where['field'], $where['op'], $where['value']);
+                    $conditions[] = $this->buildWhereCondition('`'.$where['field'].'`', $where['op'], $where['value']);
                 }
                 $conditionCount++;
             }
@@ -176,12 +186,12 @@ class QueryBuilder
                 break;
             case 'IS NULL':
             case 'IS NOT NULL':
-                return "$field $op";
+                return "$field $op ";
                 break;
             case 'LIKE':
-                return "$field $op".$this->addParameter($val)." ESCAPE'='";
+                return "$field $op ".$this->addParameter($val)." ESCAPE '='";
             default:
-                return "$field $op".$this->addParameter($val);
+                return "$field $op ".$this->addParameter($val);
         }
     }
 
@@ -190,7 +200,7 @@ class QueryBuilder
      */
     private function buildOrder()
     {
-        if (isset($this->order) && is_array($this->order) ) {
+        if (count($this->order) > 0) {
             $sql = ' ORDER BY ';
             $index=1;
             foreach($this->order as $k => $v) {

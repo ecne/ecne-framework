@@ -71,6 +71,7 @@ class DataBase
      */
     public static function execute($query, $parameters=[])
     {
+        echo $query;
         $q = self::$pdo->prepare($query);
         $q->execute($parameters);
         return $q;
