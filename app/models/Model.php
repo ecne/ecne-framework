@@ -10,9 +10,6 @@ namespace Ecne\Model;
 use Ecne\ORM\DB\Database;
 use Ecne\ORM\QueryBuilder;
 
-/**
- * @property mixed database_
- */
 class Model
 {
     /**
