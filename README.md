@@ -1,3 +1,5 @@
+[![Build Status] (https://travis-ci.org/natedrake/ecne-framework.svg?branch=dev)](https://travis-ci.org/natedrake/ecne-framework)
+
 # ecne-framework
 MVC &amp; ORM PHP Framework
 
