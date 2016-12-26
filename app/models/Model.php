@@ -27,7 +27,11 @@ class Model
     public function __construct($id=null)
     {
         if (static::$table_ === null) {
-            static::$table_ = get_class($this);
+            /**
+             * @note user reflection class to remove name space from class name
+             */
+            $reflect = new \ReflectionClass($this);
+            static::$table_ = $reflect->getShortName();
         }
 
         if ($id !== null) {
