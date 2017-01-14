@@ -102,10 +102,9 @@ class BootStrap
     /**
      * @method parse
      * @param $url|array
-     * @param $method|string
      * @return void
      */
-    public function parse($url, $method)
+    public function parse($url)
     {
         if ($url) {
             $this->loadController($this->parseURL($url));
