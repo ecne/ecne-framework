@@ -11,7 +11,6 @@ namespace Ecne\Library\Core;
 class Input
 {
     /**
-     * @method exists
      * @access public
      * @param $key
      * @return bool
@@ -22,7 +21,6 @@ class Input
     }
 
     /**
-     * @method post
      * @access public
      * @return bool
      */
@@ -32,7 +30,6 @@ class Input
     }
 
     /**
-     * @method get
      * @access public
      * @param $key
      * @return string
@@ -49,7 +46,6 @@ class Input
     }
 
     /**
-     * @method clean
      * @access public
      * @param $string
      * @return mixed
@@ -60,7 +56,6 @@ class Input
     }
 
     /**
-     * @method cleaUserInput
      * @access public
      * @param $string
      * @return string
@@ -70,11 +65,16 @@ class Input
         return strip_tags(htmlspecialchars($string));
     }
 
-    public static function secure()
+    /**
+     * @access public
+     * @param $name
+     * @return bool
+     */
+    public static function secure($name)
     {
         if (self::post()) {
-            if (self::get(Config::get('token/name'))) {
-                if (\Classes\Token::check(self::get(Config::get('token/name')))) {
+            if (self::get($name)) {
+                if (Token::check($name, self::get($name))) {
                     return true;
                 }
             }
@@ -83,8 +83,8 @@ class Input
     }
 
     /**
-     * @method clear
      * @access public
+     * @return void
      */
     public static function clear()
     {

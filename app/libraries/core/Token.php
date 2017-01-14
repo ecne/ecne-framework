@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class Ecne\Classes\Token
+ * Class Ecne\Library\Core\Token
  * @author John O'Grady
  * @date 06/07/15
  */
@@ -11,26 +11,25 @@ namespace Ecne\Library\Core;
 class Token
 {
     /**
-     * @method generate
      * @access public
+     * @param $name
      * @return string
      */
-    public static function generate()
+    public static function generate($name)
     {
-        return Session::put(Config::get('token/name'), md5(uniqid()));
+        return Session::put($name, md5(uniqid()));
     }
 
     /**
-     * @method check
      * @access public
+     * @param $name
      * @param $token
      * @return bool
      */
-    public static function check($token)
+    public static function check($name,$token)
     {
-        $tokenName = Config::get('token/name');
-        if (Session::exists($tokenName) && $token === Session::get($tokenName)) {
-            Session::delete($tokenName);
+        if (Session::exists($name) && $token === Session::get($name)) {
+            Session::delete($name);
             return true;
         } else {
             return false;
