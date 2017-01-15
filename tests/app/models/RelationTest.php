@@ -46,8 +46,8 @@ class RelationTest extends \PHPUnit_Framework_TestCase
     {
         parent::tearDown();
         DataBase::execute('DROP TABLE IF EXISTS `Entity`');
-        DataBase::execute('DROP TABLE IF EXISTS `User`');
         DataBase::execute('DROP TABLE IF EXISTS `Blog`');
+        DataBase::execute('DROP TABLE IF EXISTS `User`');
         DataBase::disconnect();
     }
 }
