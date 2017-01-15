@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Class DataBase
+ * @class DataBase
  * @version 1.1
  * @date May 2015
- **/
+**/
 
 namespace Ecne\ORM\DB;
 
@@ -15,13 +15,17 @@ use PDOException;
 class DataBase
 {
     /**
-     * @var DataBaseDriver $dbDriver
+     * @var DBDriver $dbDriver
      */
-    private static $dbDriver;
+    private static $dbDriver=null;
     /**
      * @var PDO $pdo
      */
-    private static $pdo;
+    private static $pdo=null;
+    /**
+     * @var array
+     */
+    private static $log=[];
 
     /**
      * @throws \PDOException
@@ -30,8 +34,15 @@ class DataBase
     {
         self::$dbDriver = new DBDriver(Config::get('mysql/driver'));
         try {
+            $log=new Log('Connecting to database using '.self::$dbDriver->getDSN());
+            self::$log[]=$log;
             self::$pdo = new PDO(self::$dbDriver->getDSN(), Config::get('mysql/username'), Config::get('mysql/password'));
-        } catch(PDOException $e) {
+            self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $log->finish();
+        } catch (PDOException $e) {
+            $log=new Log($e->getMessage());
+            self::addLog($log);
+            $log->finish();
             die($e->getMessage());
         }
     }
@@ -44,14 +55,26 @@ class DataBase
     public static function connectDSN($dsn, $username, $password)
     {
         try {
+            $log=new Log("Connecting to database using ". $dsn);
+            self::addLog($log);
             self::$pdo = new PDO($dsn, $username, $password);
-        } catch(PDOException $e) {
+            $log->finish();
+        } catch (PDOException $e) {
+            $log=new Log($e->getMessage());
+            self::addLog($log);
+            $log->finish();
             die($e->getMessage());
         }
     }
 
+    /**
+     * @note disconnect pdo from database
+     */
     public static function disconnect()
     {
+        $log=new Log("Disconnecting...");
+        self::$log[]=$log;
+        $log->finish();
         self::$pdo = null;
     }
 
@@ -64,16 +87,64 @@ class DataBase
     }
 
     /**
-     * @method execute
-     * @param $query |string
+     * @param $query
      * @param array $parameters
-     * @return DataBase
+     * @return \PDOStatement
      */
     public static function execute($query, $parameters=[])
     {
-        echo $query;
+        $log=new Log($query);
         $q = self::$pdo->prepare($query);
         $q->execute($parameters);
+        $log->finish();
         return $q;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function beginTransaction()
+    {
+        return self::$pdo->beginTransaction();
+    }
+
+    /**
+     * @return bool
+     */
+    public static function rollback()
+    {
+        return self::$pdo->rollBack();
+    }
+
+    /**
+     * @return bool
+     */
+    public static function commit()
+    {
+        return self::$pdo->commit();
+    }
+
+    /**
+     * @param $entry
+     */
+    public static function addLog($entry)
+    {
+        self::$log[]=$entry;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getLog()
+    {
+        return self::$log;
+    }
+
+    /**
+     *  @note clear log entries
+     */
+    public static function clearLog()
+    {
+        self::$log=[];
     }
 }   #End Class Definition
