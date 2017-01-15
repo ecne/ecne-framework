@@ -7,6 +7,7 @@
         <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/public/res/css/bootstrap-custom.css" media="screen" title="no title" charset="utf-8">
         <link rel="stylesheet" href="/public/res/css/default.css" media="screen" title="no title" charset="utf-8">
         <title><?php echo $this->data('title'); ?></title>
     </head>
@@ -33,5 +34,4 @@
                 </div>
               </div>
             </nav>
-            <div class="col-sm-2"></div>
-            <div class="col-sm-8">
+        </div>
