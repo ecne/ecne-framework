@@ -38,7 +38,6 @@ class DataBaseTest extends PHPUnit_Framework_TestCase
     {
         parent::tearDown();
         DataBase::execute('DROP TABLE IF EXISTS `Entity`');
-        echo "\n Outputting ORM Log \n";
-        print_r(DataBase::getLog());
+        DataBase::disconnect();
     }
 }

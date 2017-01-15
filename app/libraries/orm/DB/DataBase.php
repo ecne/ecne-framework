@@ -56,12 +56,10 @@ class DataBase
     {
         try {
             $log=new Log("Connecting to database using ". $dsn);
-            self::addLog($log);
             self::$pdo = new PDO($dsn, $username, $password);
             $log->finish();
         } catch (PDOException $e) {
             $log=new Log($e->getMessage());
-            self::addLog($log);
             $log->finish();
             die($e->getMessage());
         }
@@ -73,7 +71,6 @@ class DataBase
     public static function disconnect()
     {
         $log=new Log("Disconnecting...");
-        self::$log[]=$log;
         $log->finish();
         self::$pdo = null;
     }

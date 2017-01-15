@@ -1,6 +1,6 @@
 <?php
 /**
- * Class Model
+ * @class Model
  * @author John O'Grady
  * @date 21/06/2015
  */
@@ -9,22 +9,36 @@ namespace Ecne\Model;
 
 use Ecne\ORM\DB\DataBase;
 use Ecne\ORM\QueryBuilder;
+use Ecne\ORM\Relation;
 use PDO;
 
 class Model
 {
     /**
-     * @note static properties
+     * @var string $table_
      */
     protected static $table_;
+    /**
+     * @var array
+     */
+    protected static $relations_=[];
+    /**
+     * @var string
+     */
     protected static $primaryKey_ = 'Id';
-
     /**
      * @var QueryBuilder
      */
     protected $queryBuilder_;
+    /**
+     * @var bool
+     */
     protected $new_ = true;
 
+    /**
+     * Model constructor.
+     * @param null $id
+     */
     public function __construct($id=null)
     {
         if (static::$table_ === null) {
@@ -34,7 +48,6 @@ class Model
             $reflect = new \ReflectionClass($this);
             static::$table_ = $reflect->getShortName();
         }
-
         if ($id !== null) {
             $this->queryBuilder_ = new QueryBuilder($this->getType());
             $this->eq(self::$primaryKey_, $id)->limit(1);
@@ -51,15 +64,16 @@ class Model
     }
 
     /**
+     * @param $table
      * @param array|null $cols
      * @return mixed
      */
-
-    public static function select($cols = null)
+    public static function select($table, $cols = null)
     {
+        self::$table_=$table;
         $caller = get_called_class();
         $callerClass=new $caller();
-        $callerClass->queryBuilder_=new QueryBuilder(self::$table_);
+        $callerClass->queryBuilder_=new QueryBuilder($table);
         if ($cols !== null) {
             $callerClass->queryBuilder_->selectColumns($cols);
         }
@@ -85,6 +99,9 @@ class Model
         return $callerClass;
     }
 
+    /**
+     * @return mixed
+     */
     public function getType()
     {
         return static::$table_;
@@ -96,9 +113,16 @@ class Model
      */
     public function hydrateClass($data)
     {
+        $class=get_called_class();
         foreach($data as $key => $value) {
             $this->$key = $value;
         }
+
+        foreach($class::$relations_ as $relation=>$data) {
+            $rel=$relation.'_';
+            $this->$rel=new Relation($class, $this->getPrimaryKeyValue(), $data[0], $data[1]);
+        }
+
         return $this;
     }
     /**
@@ -285,13 +309,8 @@ class Model
     }
 
     /**
-     * @note sort results
-     *
      * @param $orderBy
      * @return $this
-     * @internal param $col
-     * @internal param $order
-     *
      */
     public function sort($orderBy)
     {
@@ -300,7 +319,7 @@ class Model
     }
 
     /**
-     * @return null
+     * @return void
      */
     public function save()
     {
@@ -329,7 +348,7 @@ class Model
     }
 
     /**
-     *
+     * @return void
      */
     public function delete()
     {
@@ -378,30 +397,53 @@ class Model
         return $one;
     }
 
+    /**
+     * @return mixed
+     */
     private function returnAggregateColumn()
     {
         $query=$this->queryBuilder_->go();
         return $query->fetch(\PDO::FETCH_OBJ);
     }
 
+    /**
+     * @param $column
+     * @param null $alias
+     * @return mixed
+     */
     public function avg($column, $alias=null)
     {
         $this->queryBuilder_->aggregateColumn("AVG", $column, $alias);
         return $this->returnAggregateColumn();
     }
 
+    /**
+     * @param $column
+     * @param null $alias
+     * @return mixed
+     */
     public function min($column, $alias=null)
     {
         $this->queryBuilder_->aggregateColumn("MIN", $column, $alias);
         return $this->returnAggregateColumn();
     }
 
+    /**
+     * @param $column
+     * @param null $alias
+     * @return mixed
+     */
     public function max($column, $alias=null)
     {
         $this->queryBuilder_->aggregateColumn("MAX", $column, $alias);
         return $this->returnAggregateColumn();
     }
 
+    /**
+     * @param $column
+     * @param null $alias
+     * @return mixed
+     */
     public function count($column, $alias=null)
     {
         $this->queryBuilder_->aggregateColumn("COUNT", $column, $alias);

@@ -281,6 +281,7 @@ class QueryBuilder
     public function go()
     {
         $sql = $this->buildQuery();
+
         $q = Database::execute($sql, $this->parameters);
         $this->reset();
         return $q;

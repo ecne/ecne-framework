@@ -3,11 +3,11 @@
 namespace Ecne\Test;
 
 use Ecne\Model\Model;
+use Ecne\Model\User;
 use Ecne\ORM\DB\DataBase;
 
 class ModelTest extends \PHPUnit_Framework_TestCase
 {
-
     public function setUp()
     {
         parent::setup();
@@ -15,6 +15,10 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         DataBase::execute('DROP TABLE IF EXISTS `Entity`');
         Database::execute('CREATE TABLE Entity (Id INT(11) NOT NULL AUTO_INCREMENT,Name VARCHAR(25) NOT NULL,RoleId INT(11) NOT NULL,PRIMARY KEY(Id))');
         DataBase::execute('INSERT INTO `Entity` (Id, Name, RoleId) VALUES (?, ?, ?)', [1, 'Batman', 1]);
+
+        DataBase::execute('DROP TABLE IF EXISTS `User`');
+        Database::execute('CREATE TABLE `User` (Id INT(11) NOT NULL AUTO_INCREMENT,Username VARCHAR(25) NOT NULL,PRIMARY KEY(Id))');
+        DataBase::execute('INSERT INTO `User` (Id, Username) VALUES (?, ?)', [1, 'natedrake']);
     }
 
     public function testAggregateFunction()
@@ -23,12 +27,22 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $model->count);
     }
 
+    public function testUserUpdate()
+    {
+        $user=User::select()->eq('Username', 'natedrake')->one();
+        $user->Username='natedrake1';
+        $user->save();
+
+        $newUser=User::select()->eq('Username', 'natedrake1')->one();
+        $this->assertEquals(1, $newUser->Id);
+    }
+
     public function testDelete()
     {
         $user=Model::type('Entity')->eq('Id',1)->one();
         $user->delete();
 
-        $count=Model::type('Entity')->avg('Id', 'count');
+        $count=Model::type('Entity')->count('Id', 'count');
         $this->assertEquals(0,$count->count);
     }
 
@@ -36,8 +50,8 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     {
         parent::tearDown();
         DataBase::execute('DROP TABLE IF EXISTS `Entity`');
-        echo "\n Outputting ORM Log \n";
-        print_r(DataBase::getLog());
+        DataBase::execute('DROP TABLE IF EXISTS `User`');
+        DataBase::disconnect();
     }
 
 }
