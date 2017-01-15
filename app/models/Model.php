@@ -7,8 +7,9 @@
 
 namespace Ecne\Model;
 
-use Ecne\ORM\DB\Database;
+use Ecne\ORM\DB\DataBase;
 use Ecne\ORM\QueryBuilder;
+use PDO;
 
 class Model
 {
@@ -28,7 +29,7 @@ class Model
     {
         if (static::$table_ === null) {
             /**
-             * @note user reflection class to remove name space from class name
+             * @note use reflection class to remove name space from class name
              */
             $reflect = new \ReflectionClass($this);
             static::$table_ = $reflect->getShortName();
@@ -57,12 +58,36 @@ class Model
     public static function select($cols = null)
     {
         $caller = get_called_class();
-        $callerClass = new $caller();
-        $callerClass->queryBuilder_ = new QueryBuilder(self::$table_);
+        $callerClass=new $caller();
+        $callerClass->queryBuilder_=new QueryBuilder(self::$table_);
         if ($cols !== null) {
-            $callerClass->queryBuilder->selectColumns($cols);
+            $callerClass->queryBuilder_->selectColumns($cols);
         }
         return $callerClass;
+    }
+
+    /**
+     * @note define entity type which will be used as the table's names
+     *
+     * @param $type
+     * @param null $columns
+     * @return $this
+     */
+    public static function type($type, $columns=null)
+    {
+        self::$table_=$type;
+        $caller=get_called_class();
+        $callerClass=new $caller();
+        $callerClass->queryBuilder_=new QueryBuilder($type);
+        if ($columns !== null) {
+            $callerClass->queryBuilder_->selectColumns($columns);
+        }
+        return $callerClass;
+    }
+
+    public function getType()
+    {
+        return static::$table_;
     }
 
     /**
@@ -83,23 +108,6 @@ class Model
     {
         $caller = get_called_class();
         return new $caller();
-    }
-
-    /**
-     * @note define entity type which will be used as the table's names
-     *
-    * @param $type
-    * @return $this
-    */
-    public function type($type)
-    {
-      $this->queryBuilder_->type($type);
-      return $this;
-    }
-
-    public function getType()
-    {
-        return static::$table_;
     }
 
     /**
@@ -309,6 +317,7 @@ class Model
         $this->queryBuilder_->setEntityData($this->toAssocArray());
         $query = $this->queryBuilder_->go();
 
+
         if ($this->new_) {
             $primaryKey = $this->getPrimaryKey();
             if (!property_exists(get_called_class(), $primaryKey)) {
@@ -325,6 +334,9 @@ class Model
     public function delete()
     {
         if (!$this->new_) {
+            if ($this->queryBuilder_===null) {
+                $this->queryBuilder_=new QueryBuilder($this->getType());
+            }
             $this->eq($this->getPrimaryKey(), $this->getPrimaryKeyValue());
             $this->queryBuilder_->setQueryType(QueryBuilder::QUERY_TYPE_DELETE);
             $this->queryBuilder_->go();
@@ -364,6 +376,36 @@ class Model
             $one->new_=false;
         }
         return $one;
+    }
+
+    private function returnAggregateColumn()
+    {
+        $query=$this->queryBuilder_->go();
+        return $query->fetch(\PDO::FETCH_OBJ);
+    }
+
+    public function avg($column, $alias=null)
+    {
+        $this->queryBuilder_->aggregateColumn("AVG", $column, $alias);
+        return $this->returnAggregateColumn();
+    }
+
+    public function min($column, $alias=null)
+    {
+        $this->queryBuilder_->aggregateColumn("MIN", $column, $alias);
+        return $this->returnAggregateColumn();
+    }
+
+    public function max($column, $alias=null)
+    {
+        $this->queryBuilder_->aggregateColumn("MAX", $column, $alias);
+        return $this->returnAggregateColumn();
+    }
+
+    public function count($column, $alias=null)
+    {
+        $this->queryBuilder_->aggregateColumn("COUNT", $column, $alias);
+        return $this->returnAggregateColumn();
     }
 
     /**

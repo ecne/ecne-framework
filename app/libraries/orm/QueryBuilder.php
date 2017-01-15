@@ -100,16 +100,39 @@ class QueryBuilder
         }
     }
 
+    /**
+     * @param $function
+     * @param $column
+     * @param null $alias
+     */
+    public function aggregateColumn($function, $column, $alias=null)
+    {
+        if ($alias) {
+            $this->selectColumns = ["$function($column) as $alias"];
+        } else {
+            $this->selectColumns = ["$function($column)"];
+        }
+    }
+
+    /**
+     * @param array $order
+     */
     public function setOrder($order=[])
     {
         $this->order = $order;
     }
 
+    /**
+     * @note conditional OR statements
+     */
     public function plus()
     {
         $this->conditionChain[] = " OR ";
     }
 
+    /**
+     * @note conditional AND statements
+     */
     public function times()
     {
         $this->conditionChain[] = " AND ";
@@ -139,7 +162,7 @@ class QueryBuilder
                 foreach ($this->entityData as $k => $v) {
                     $updates[] = $k.'='.$this->addParameter($v);
                 }
-                return 'UPDATE INTO `'.$this->entityType.'` SET ' . implode(', ', $updates[]);
+                return 'UPDATE `'.$this->entityType.'` SET ' . implode(', ', $updates);
                 break;
             case self::QUERY_TYPE_DELETE:
                 return 'DELETE FROM `'.$this->entityType.'`';
@@ -253,7 +276,7 @@ class QueryBuilder
     }
 
     /**
-     * @return DataBase
+     * @return \PDOStatement
      */
     public function go()
     {
@@ -271,7 +294,7 @@ class QueryBuilder
         $this->entityData=null;
         $this->queryType=self::QUERY_TYPE_SELECT;
         $this->limit=null;
-        $this->offset = null;
+        $this->offset=null;
         $this->selectColumns=[];
         $this->where=[];
         $this->order=[];
