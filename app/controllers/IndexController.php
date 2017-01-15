@@ -6,8 +6,6 @@
 
 namespace Ecne\Controller;
 
-use Ecne\Core\View;
-
 class IndexController extends Controller
 {
     public function __construct()
