@@ -114,15 +114,16 @@ class Model
     public function hydrateClass($data)
     {
         $class=get_called_class();
-        foreach($data as $key => $value) {
-            $this->$key = $value;
-        }
+        if ($data) {
+            foreach($data as $key => $value) {
+                $this->$key = $value;
+            }
 
-        foreach($class::$relations_ as $relation=>$data) {
-            $rel=$relation.'_';
-            $this->$rel=new Relation($class, $this->getPrimaryKeyValue(), $data[0], $data[1]);
+            foreach($class::$relations_ as $relation=>$data) {
+                $rel=$relation.'_';
+                $this->$rel=new Relation($class, $this->getPrimaryKeyValue(), $data[0], $data[1]);
+            }
         }
-
         return $this;
     }
     /**
@@ -388,7 +389,7 @@ class Model
         $query = $this->queryBuilder_->go();
         $result = $query->fetch(\PDO::FETCH_OBJ);
         $one = null;
-        if (count($result)) {
+        if (($result)) {
             $one = $this->dispenseClass()->hydrateClass($result);
             $primaryKey = $this->getPrimaryKey();
             $one->$primaryKey = $result->$primaryKey;
@@ -447,6 +448,17 @@ class Model
     public function count($column, $alias=null)
     {
         $this->queryBuilder_->aggregateColumn("COUNT", $column, $alias);
+        return $this->returnAggregateColumn();
+    }
+
+    /**
+     * @param $column
+     * @param null $alias
+     * @return mixed
+     */
+    public function sum($column, $alias=null)
+    {
+        $this->queryBuilder_->aggregateColumn("SUM", $column, $alias);
         return $this->returnAggregateColumn();
     }
 
