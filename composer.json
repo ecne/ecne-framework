@@ -17,7 +17,7 @@
       "Ecne\\Model\\": "app/models",
       "Ecne\\Http\\": "http",
       "Ecne\\Router\\": "router",
-      "Ecne\\Library\\Core\\": "libraries/code",
+      "Ecne\\Library\\Core\\": "libraries/core",
       "Ecne\\Template\\": "template",
       "Ecne\\ORM\\": "orm",
       "Ecne\\ORM\\DB\\": "orm/db"
