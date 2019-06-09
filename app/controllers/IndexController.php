@@ -14,7 +14,6 @@ class IndexController extends Controller
 
     public function index()
     {
-        print("hello world");
         $this->view->render('index/index', [
             'title'=>'Home',
         ]);
