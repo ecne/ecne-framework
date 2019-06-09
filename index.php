@@ -24,3 +24,6 @@ $GLOBALS['config'] = array(
         'db' => 'test'
     )
 );
+
+$bootstrap = new Ecne\BootStrap\BootStrap();
+$bootstrap->bootstrap(new Ecne\Http\Request());

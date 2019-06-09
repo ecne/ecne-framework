@@ -5,8 +5,6 @@
 
 namespace Ecne\BootStrap;
 
-use \Ecne\Library\Core\Helper;
-
 class View
 {
     /**
