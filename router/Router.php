@@ -7,6 +7,7 @@ namespace Ecne\Router;
 
 use Ecne\BootStrap\Application;
 use Ecne\Http\Request;
+use Ecne\Library\Core\File;
 
 class Router
 {
@@ -81,7 +82,7 @@ class Router
     public function route(Request $request)
     {
         if ($route = $this->findRoute($request->getMethod(), $request->getURI())) {
-            if (file_exists(CONTROLLER_PATH . ucfirst($route->getControllerName()) . 'Controller.php')) {
+            if (File::exists(CONTROLLER_PATH . ucfirst($route->getControllerName()) . 'Controller.php')) {
                 $route->getControllerName("Ecne\\Controller\\" . ucfirst($route->getControllerName()) . 'Controller');
                 $controller = $route->getControllerName();
                 $route->getController(new $controller);
