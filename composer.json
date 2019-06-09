@@ -10,24 +10,17 @@
       "role": "Lead Developer"
     }
   ],
-  "autoload":{
+  "autoload": {
     "psr-4": {
+      "Ecne\\BootStrap\\": "bootstrap",
       "Ecne\\Controller\\": "app/controllers",
       "Ecne\\Model\\": "app/models",
-      "Ecne\\Core\\": "app/core",
-      "Ecne\\Library\\Core\\": "app/libraries/core",
-      "Ecne\\Templator\\": "app/libraries/templator",
-      "Ecne\\EmailTemplator\\":"app/libraries/emailtemplator",
-      "Ecne\\ORM\\": "app/libraries/orm",
-      "Ecne\\ORM\\DB\\": "app/libraries/orm/db"
+      "Ecne\\Http\\": "http",
+      "Ecne\\Router\\": "router",
+      "Ecne\\Library\\Core\\": "libraries/code",
+      "Ecne\\Template\\": "template",
+      "Ecne\\ORM\\": "orm",
+      "Ecne\\ORM\\DB\\": "orm/db"
     }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Ecne\\Test\\": "tests/"
-    }
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^4.8|^5.2"
   }
 }
